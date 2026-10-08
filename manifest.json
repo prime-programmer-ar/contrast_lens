@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "ContrastLens – Contrast & Accessibility Toolkit",
+  "short_name": "ContrastLens",
+  "version": "1.0.0",
+  "description": "Eyedropper contrast checker (WCAG 2.x), automatic dominant-colour detection, page contrast scan, tab-order and accessibility audits.",
+  "minimum_chrome_version": "114",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Open ContrastLens",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "src/panel/index.html"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "permissions": ["sidePanel", "scripting", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "commands": {
+    "open-panel": {
+      "suggested_key": { "default": "Alt+Shift+C" },
+      "description": "Open ContrastLens"
+    }
+  }
+}

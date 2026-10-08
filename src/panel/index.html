@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ContrastLens</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+      <rect width="32" height="32" rx="8" fill="#14597A"/>
+      <circle cx="16" cy="16" r="9" fill="#fff"/>
+      <path d="M16 7a9 9 0 0 1 0 18z" fill="#0b1b26"/>
+    </svg>
+    <div class="titles">
+      <h1>ContrastLens</h1>
+      <p id="page-label" class="page-label" title="">No page selected</p>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Tools">
+    <button role="tab" id="tab-contrast" data-view="contrast" aria-selected="true" aria-controls="view-contrast">Contrast</button>
+    <button role="tab" id="tab-scan" data-view="scan" aria-selected="false" aria-controls="view-scan" tabindex="-1">Page scan</button>
+    <button role="tab" id="tab-taborder" data-view="taborder" aria-selected="false" aria-controls="view-taborder" tabindex="-1">Tab order</button>
+    <button role="tab" id="tab-audit" data-view="audit" aria-selected="false" aria-controls="view-audit" tabindex="-1">Audit</button>
+    <button role="tab" id="tab-vision" data-view="vision" aria-selected="false" aria-controls="view-vision" tabindex="-1">Vision</button>
+  </nav>
+
+  <main>
+    <!-- ============================ CONTRAST ============================ -->
+    <section id="view-contrast" class="view" role="tabpanel" aria-labelledby="tab-contrast">
+      <div class="pair">
+        <div class="color-card" data-slot="a">
+          <div class="card-head"><span class="slot">A</span>Text</div>
+          <label class="swatch" id="swatch-a"><span class="sr-only">Choose colour A</span><input type="color" id="color-a"></label>
+          <input class="hex" id="hex-a" type="text" spellcheck="false" autocomplete="off" aria-label="Colour A value">
+          <div class="btn-row">
+            <button class="btn small" data-pick="a" title="Pick any pixel on the page with a magnifier">Pick on page</button>
+            <button class="btn small ghost" data-screen="a" title="Pick from anywhere on your screen">Screen</button>
+          </div>
+        </div>
+        <button class="swap" id="swap" title="Swap colours" aria-label="Swap colours A and B">⇄</button>
+        <div class="color-card" data-slot="b">
+          <div class="card-head"><span class="slot">B</span>Background</div>
+          <label class="swatch" id="swatch-b"><span class="sr-only">Choose colour B</span><input type="color" id="color-b"></label>
+          <input class="hex" id="hex-b" type="text" spellcheck="false" autocomplete="off" aria-label="Colour B value">
+          <div class="btn-row">
+            <button class="btn small" data-pick="b" title="Pick any pixel on the page with a magnifier">Pick on page</button>
+            <button class="btn small ghost" data-screen="b" title="Pick from anywhere on your screen">Screen</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="result">
+        <div class="ratio-row">
+          <output id="ratio" class="ratio" aria-live="polite">21.00</output><span class="ratio-unit">:1</span>
+          <span id="rating" class="rating">Excellent</span>
+        </div>
+        <div class="preview" id="preview">
+          <div class="pv-large">Large text, 24px</div>
+          <div class="pv-normal">Normal text — the quick brown fox jumps over the lazy dog.</div>
+          <div class="pv-ui"><span class="pv-box">UI</span> component outline &amp; icon</div>
+        </div>
+        <ul class="badges" id="badges" aria-label="WCAG results"></ul>
+        <div id="suggest"></div>
+        <details id="calc">
+          <summary>Show the calculation</summary>
+          <div id="calc-body"></div>
+        </details>
+        <div class="btn-row"><button class="btn small" id="copy-result">Copy result</button></div>
+      </div>
+
+      <div class="card">
+        <h2>Detect colours automatically</h2>
+        <p class="muted">Read the page’s real text and background colours, or extract the dominant colours from what is on screen.</p>
+        <div class="btn-row">
+          <button class="btn" id="btn-auto-dom">Text &amp; background</button>
+          <button class="btn ghost" id="btn-auto-shot">Dominant colours</button>
+        </div>
+        <div id="auto-out"></div>
+      </div>
+    </section>
+
+    <!-- ============================ PAGE SCAN ============================ -->
+    <section id="view-scan" class="view" role="tabpanel" aria-labelledby="tab-scan" hidden>
+      <div class="card">
+        <h2>Page contrast scan</h2>
+        <p class="muted">Checks every visible text element against WCAG, including opacity and translucent backgrounds.</p>
+        <div class="btn-row">
+          <select id="scan-level" aria-label="Conformance level">
+            <option value="AA">Level AA (4.5 / 3)</option>
+            <option value="AAA">Level AAA (7 / 4.5)</option>
+          </select>
+          <button class="btn" id="btn-scan">Scan page</button>
+        </div>
+        <label class="check"><input type="checkbox" id="scan-fail-only" checked> Show failures only</label>
+      </div>
+      <div id="scan-out"></div>
+    </section>
+
+    <!-- ============================ TAB ORDER ============================ -->
+    <section id="view-taborder" class="view" role="tabpanel" aria-labelledby="tab-taborder" hidden>
+      <div class="card">
+        <h2>Tab order &amp; keyboard check</h2>
+        <p class="muted">Numbers every keyboard stop on the page in the order Tab visits it and flags focus problems — ideal for forms.</p>
+        <label class="check"><input type="checkbox" id="tab-focus" checked> Also test focus indicators <span class="muted">(briefly focuses each element)</span></label>
+        <div class="btn-row">
+          <button class="btn" id="btn-tab">Analyse tab order</button>
+          <button class="btn ghost" id="btn-tab-clear">Clear overlay</button>
+        </div>
+      </div>
+      <div id="tab-out"></div>
+    </section>
+
+    <!-- ============================ AUDIT ============================ -->
+    <section id="view-audit" class="view" role="tabpanel" aria-labelledby="tab-audit" hidden>
+      <div class="card">
+        <h2>Accessibility quick audit</h2>
+        <p class="muted">Labels, names, alt text, headings, landmarks, target size, autocomplete and more.</p>
+        <div class="btn-row"><button class="btn" id="btn-audit">Run audit</button><button class="btn ghost" id="btn-audit-copy" disabled>Copy report</button></div>
+      </div>
+      <div id="audit-out"></div>
+    </section>
+
+    <!-- ============================ VISION ============================ -->
+    <section id="view-vision" class="view" role="tabpanel" aria-labelledby="tab-vision" hidden>
+      <div class="card">
+        <h2>Colour-blindness simulation</h2>
+        <p class="muted">Preview the page as people with colour-vision deficiencies see it. Colour changes are only applied while this mode is on.</p>
+        <fieldset class="radios" id="vision-modes">
+          <legend class="sr-only">Simulation</legend>
+          <label><input type="radio" name="vision" value="none" checked> Normal vision</label>
+          <label><input type="radio" name="vision" value="protanopia"> Protanopia <span class="muted">(no red)</span></label>
+          <label><input type="radio" name="vision" value="deuteranopia"> Deuteranopia <span class="muted">(no green)</span></label>
+          <label><input type="radio" name="vision" value="tritanopia"> Tritanopia <span class="muted">(no blue)</span></label>
+          <label><input type="radio" name="vision" value="achromatopsia"> Achromatopsia <span class="muted">(greyscale)</span></label>
+        </fieldset>
+      </div>
+      <div class="card">
+        <h2>Your colour pair, simulated</h2>
+        <div id="vision-pair"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="../lib/color.js"></script>
+  <script src="../lib/dominant.js"></script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
